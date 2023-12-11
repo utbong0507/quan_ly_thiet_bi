@@ -284,12 +284,12 @@ def getHome(request):
             return render(request, 'pages/Borrowdevice.html',{"device": device,"thongbao":listT,"name":name,"role":rl,"userName":userName})
         if mon!="":
             device = Device.objects.all()
-            list = []
+            list =[]
             for x in device:
-                if mon in x.code and x.unit!='phòng':
+                if mon in x.code and x.unit != 'phòng':
                     list.append(x)
             listT = thongBao(request)
-            return render(request, 'pages/Home.html',{"device": device,"thongbao":listT,"name":name,"role":rl})
+            return render(request, 'pages/Home.html',{"device": list,"thongbao":listT,"name":name,"role":rl})
     device = Device.objects.all()
     listDevice =[]
     listDevice0 =[]
