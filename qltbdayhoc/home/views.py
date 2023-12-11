@@ -63,7 +63,7 @@ def excelHsd(list):
         worksheet.cell(row=row_num, column=10, value=device.hansudung)
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=user_data.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=hoachathethsd.xlsx'
     workbook.save(response)
     return response
 
@@ -80,7 +80,7 @@ def excelNd(list):
         worksheet.cell(row=row_num, column=4, value=device.password)
         worksheet.cell(row=row_num, column=5, value=device.role)
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=hsd_data.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=nguoidung.xlsx'
     workbook.save(response)
     return response
 
@@ -283,7 +283,11 @@ def getHome(request):
             listT = thongBao(request)
             return render(request, 'pages/Borrowdevice.html',{"device": device,"thongbao":listT,"name":name,"role":rl,"userName":userName})
         if mon!="":
-            device = Device.objects.filter(code = mon)
+            device = Device.objects.all()
+            list = []
+            for x in device:
+                if mon in x.code and x.unit!='phòng':
+                    list.append(x)
             listT = thongBao(request)
             return render(request, 'pages/Home.html',{"device": device,"thongbao":listT,"name":name,"role":rl})
     device = Device.objects.all()
@@ -371,7 +375,7 @@ def getThongKe(request):
             device = Device.objects.all().order_by('id')
             listHsd = []
             for x in device:
-                if x.hansudung != "#":
+                if x.hansudung != "#" and  x.status == "Hết hạn":
                     listHsd.append(x)
             file = excelHsd(listHsd)
             return file
@@ -415,9 +419,14 @@ def getAdmin(request):
         if mon!="" or mon != None:
             device = Device.objects.all()
             listmon =[]
-            for x in device:
-                if mon in x.code:
-                    listmon.append(x)
+            if mon == "hsd":
+                for x in device:
+                    if "Hết hạn" == x.status:
+                        listmon.append(x)
+            else:
+                for x in device:
+                    if mon in x.code:
+                        listmon.append(x)
             listT = thongBao(request)
             return render(request, 'pages/Admin.html',{"device": listmon,"thongbao":listT,"name":name,"role":rl})
     device = Device.objects.all()
