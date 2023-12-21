@@ -379,7 +379,7 @@ def getThongKe(request):
             if giaovien != None: # thống kê theo giáo viên
                 list = []
                 for x in device:
-                    if giaovien in x.giaovien:
+                    if giaovien.upper() in x.userId.name.upper():
                         list.append(x)
                     sum =0
                 for x in list:
