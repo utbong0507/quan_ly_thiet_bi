@@ -198,7 +198,7 @@
       <form class="contetn__soft__option" method="post" action="{% url 'home:thongke' %}">
         {% csrf_token %}
         <span>Lọc theo người mượn:</span>
-        <input name="giaovien" id="giaovien" placeholder="Nhập tên đăng nhập" type="text" style="width: 200px; height: 30px;"/>
+        <input name="giaovien" id="giaovien" placeholder="Nhập tên người" type="text" style="width: 200px; height: 30px;"/>
           <button type="submit" class="soft__btn">Lọc</button> 
       </form>
       <form method="post" action="{% url 'home:thongke' %}" class="contetn__soft__option contetn__soft__option--date">
@@ -218,7 +218,8 @@
             <th>Trạng thái</th>
             <th>Số lượng (mượn)</th>
             <th>Đơn vị</th>
-            <th>Người mượn (-T là đã trả)</th>
+            <th>Người mượn</th>
+            <th> Tên tài khoản (-T là đã trả)</th>
             <th>Ngày mượn</th>
             <th>Tiết mượn</th>
           </tr>
@@ -231,7 +232,8 @@
             <td>{{device.deviceId.status}}</td>
             <td>1</td>
             <td>{{device.deviceId.unit}}</td>
-            <td>{{device.giaovien}} mượn cho: {{device.lop}}</td>
+            <td>{{device.userId.name}} mượn cho: {{device.lop}}</td>
+            <td>{{device.giaovien}}</td>
             <td>{{device.muon}}</td>
             <td>{{device.tiet}}</td>
           </tr>
