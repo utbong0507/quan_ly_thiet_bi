@@ -127,7 +127,7 @@ def checkGioMuon():
         T= str(x.muon) + " "+ result_time_string #2023-11-30 08:00:00  2023-11-30 07:15:00
         dateNow =str(timeVietnam("no"))
         # dateNow = "2023-12-02 09:20:00" # test thời gian timetest
-        if T== dateNow or dateNow>T or dateNow< x.tiet:
+        if T== dateNow or T<dateNow or dateNow>result_time:
             device = Device.objects.get(id=x.deviceId_id)
             mt= BorrowReturn.objects.get(id=x.id)
             mt.giaovien = mt.giaovien + "-"
