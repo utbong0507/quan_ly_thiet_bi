@@ -116,8 +116,8 @@ def checkGioMuon():
             non=0
         else:
             dateNow =str(timeVietnam("dmy")) #lấy giờ thực tế
-            # dateNow = "2023-12-02" # test thời gian timetest
-            if dateNow in x.muon:
+            dateNow = "2023-12-04" # test thời gian timetest
+            if dateNow > x.muon or dateNow == x.muon:
                 listls.append(x) # thêm vào
     for x in listls:
         input_time_string = x.tiet
@@ -126,7 +126,7 @@ def checkGioMuon():
         result_time_string = result_time.strftime("%H:%M:%S")
         T= str(x.muon) + " "+ result_time_string #2023-11-30 08:00:00  2023-11-30 07:15:00
         dateNow =str(timeVietnam("no"))
-        # dateNow = "2023-12-02 09:20:00" # test thời gian timetest
+        dateNow = "2023-12-04 07:20:00" # test thời gian timetest
         if T== dateNow or T<dateNow or dateNow>result_time:
             device = Device.objects.get(id=x.deviceId_id)
             mt= BorrowReturn.objects.get(id=x.id)
@@ -135,10 +135,32 @@ def checkGioMuon():
             # if int(device.quantity) > 0:
             device.quantity=int(device.quantity) -1
             device.save() # thõa mãn giờ bắt đầu thì trừ thiết bị trong kho lưu lại
+    for x in borrowReturn:
+        input_time_string = x.tiet
+        input_time = datetime.strptime(input_time_string, "%H:%M:%S")
+        result_time = input_time - timedelta(minutes=45)
+        result_time_string = result_time.strftime("%H:%M:%S")
+        T= str(x.muon) + " "+ result_time_string #2023-11-30 08:00:00  2023-11-30 07:15:00
+        dateNow =str(timeVietnam("no"))
+        dateNow = "2023-12-04 07:20:00" # test thời gian timetest
+        if dateNow < T:
+            if "-" in x.giaovien:
+                if "T" in x.giaovien:
+                    non=0
+                else:
+                    device = Device.objects.get(id=x.deviceId_id)
+                    mt= BorrowReturn.objects.get(id=x.id)
+                    mt.giaovien = x.giaovien[:-1]
+                    mt.save() # đánh dấu lại giáo viên đã nhận thiết bị
+                    device.quantity=int(device.quantity) +1
+                    device.save()
+                    print(mt.giaovien)
+
+
 
 def checkSLM(deviceId,tietm,ngaym): #lấy lúc mình bấm mượn
     dateNow =str(timeVietnam("no"))
-    # dateNow = "2023-12-02 09:20:00" #test thời gian timetest
+    dateNow = "2023-12-04 07:20:00" #test thời gian timetest
     input_time_string = tietm
     input_time = datetime.strptime(input_time_string, "%H:%M:%S")
     result_time = input_time - timedelta(minutes=45)
@@ -379,7 +401,7 @@ def getThongKe(request):
             if giaovien != None: # thống kê theo giáo viên
                 list = []
                 for x in device:
-                    if giaovien.upper() in x.userId.name.upper():
+                    if giaovien in x.giaovien:
                         list.append(x)
                     sum =0
                 for x in list:
